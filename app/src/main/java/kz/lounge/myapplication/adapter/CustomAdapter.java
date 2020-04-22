@@ -24,11 +24,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
     private List<Post> dataList;
     private Context context;
 
-    public CustomAdapter(Context context, Page<Post> dataList){
+    public CustomAdapter(Context context, Page<Post> dataList) {
         this.context = context;
         this.dataList = dataList.getContent();
     }
-
 
 
     @Override
@@ -40,14 +39,18 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
     @Override
     public void onBindViewHolder(CustomViewHolder holder, int position) {
-        holder.getTxtTitle().setText(dataList.get(position).getTitle());
+        holder.getPostTitle().setText(dataList.get(position).getTitle());
+        holder.getRating().setText(""+dataList.get(position).getRating());
 
+        if(dataList.get(position).getCommentCount() != null) {
+            holder.getCommentCount().setText("" + dataList.get(position).getCommentCount().toString());
+        }
         Picasso.Builder builder = new Picasso.Builder(context);
         builder.downloader(new OkHttp3Downloader(context));
         builder.build().load(dataList.get(position).getImageUrl())
                 .placeholder((R.drawable.ic_launcher_background))
                 .error(R.drawable.ic_launcher_background)
-                .into(holder.getCoverImage());
+                .into(holder.getPostImage());
 
     }
 
@@ -62,28 +65,49 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 class CustomViewHolder extends RecyclerView.ViewHolder {
 
 
-    private TextView txtTitle;
-    private ImageView coverImage;
+    private TextView postTitle;
+    private ImageView postImage;
+    private TextView rating;
+    private TextView commentCount;
 
-    CustomViewHolder(View itemView) {
-        super(itemView);
-        txtTitle = super.itemView.findViewById(R.id.textView2);
-        coverImage = super.itemView.findViewById(R.id.imageView2);
+    CustomViewHolder(View view) {
+        super(view);
+        postTitle = super.itemView.findViewById(R.id.postTitle);
+        postImage = super.itemView.findViewById(R.id.postImage);
+
+        rating = super.itemView.findViewById(R.id.rating);
+        commentCount = super.itemView.findViewById(R.id.commentCount);
     }
 
-    public TextView getTxtTitle() {
-        return txtTitle;
+    public TextView getPostTitle() {
+        return postTitle;
     }
 
-    public void setTxtTitle(TextView txtTitle) {
-        this.txtTitle = txtTitle;
+    public void setPostTitle(TextView postTitle) {
+        this.postTitle = postTitle;
     }
 
-    public ImageView getCoverImage() {
-        return coverImage;
+    public ImageView getPostImage() {
+        return postImage;
     }
 
-    public void setCoverImage(ImageView coverImage) {
-        this.coverImage = coverImage;
+    public void setPostImage(ImageView postImage) {
+        this.postImage = postImage;
+    }
+
+    public TextView getRating() {
+        return rating;
+    }
+
+    public void setRating(TextView rating) {
+        this.rating = rating;
+    }
+
+    public TextView getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(TextView commentCount) {
+        this.commentCount = commentCount;
     }
 }
