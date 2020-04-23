@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import kz.lounge.myapplication.adapter.CustomAdapter;
+import kz.lounge.myapplication.adapter.PostAdapter;
 import kz.lounge.myapplication.config.RetrofitClientInstance;
 import kz.lounge.myapplication.model.Page;
 import kz.lounge.myapplication.model.Post;
@@ -20,7 +20,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CustomAdapter adapter;
+    private PostAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressDialog progressDoalog;
 
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void generateDataList(Page<Post> photoList) {
         recyclerView = findViewById(R.id.rvContacts);
-        adapter = new CustomAdapter(this, photoList);
+        adapter = new PostAdapter(this, photoList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

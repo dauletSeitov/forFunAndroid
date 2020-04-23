@@ -19,26 +19,26 @@ import kz.lounge.myapplication.R;
 import kz.lounge.myapplication.model.Page;
 import kz.lounge.myapplication.model.Post;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
+public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
     private List<Post> dataList;
     private Context context;
 
-    public CustomAdapter(Context context, Page<Post> dataList) {
+    public PostAdapter(Context context, Page<Post> dataList) {
         this.context = context;
         this.dataList = dataList.getContent();
     }
 
 
     @Override
-    public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.item_contact, parent, false);
-        return new CustomViewHolder(view);
+        return new PostViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(CustomViewHolder holder, int position) {
+    public void onBindViewHolder(PostViewHolder holder, int position) {
         holder.getPostTitle().setText(dataList.get(position).getTitle());
         holder.getRating().setText(""+dataList.get(position).getRating());
 
@@ -62,7 +62,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
 }
 
-class CustomViewHolder extends RecyclerView.ViewHolder {
+class PostViewHolder extends RecyclerView.ViewHolder {
 
 
     private TextView postTitle;
@@ -70,7 +70,7 @@ class CustomViewHolder extends RecyclerView.ViewHolder {
     private TextView rating;
     private TextView commentCount;
 
-    CustomViewHolder(View view) {
+    PostViewHolder(View view) {
         super(view);
         postTitle = super.itemView.findViewById(R.id.postTitle);
         postImage = super.itemView.findViewById(R.id.postImage);
