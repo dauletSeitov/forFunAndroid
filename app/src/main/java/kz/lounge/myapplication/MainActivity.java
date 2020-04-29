@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         progressDoalog.show();
 
         /*Create handle for the RetrofitInstance interface*/
-        PostRepository service = RetrofitClientInstance.getRetrofitInstance().create(PostRepository.class);
+        PostRepository service = RetrofitClientInstance.getRetrofitInstance(this).create(PostRepository.class);
         Call<Page<Post>> call = service.getAllPhotos("FRESH");
         call.enqueue(new Callback<Page<Post>>() {
             @Override
@@ -51,6 +51,20 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+//        Button cd = findViewById(R.id.button);
+//
+//        cd.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                // TODO Auto-generated method stub
+//                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+//                startActivity(i);
+//            }
+//        });
+
     }
 
     private void generateDataList(Page<Post> photoList) {

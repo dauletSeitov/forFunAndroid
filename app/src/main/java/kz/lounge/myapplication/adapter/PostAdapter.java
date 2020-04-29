@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,17 +17,24 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import kz.lounge.myapplication.R;
+import kz.lounge.myapplication.config.RetrofitClientInstance;
 import kz.lounge.myapplication.model.Page;
 import kz.lounge.myapplication.model.Post;
+import kz.lounge.myapplication.repository.PostRepository;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
     private List<Post> dataList;
     private Context context;
+    private PostRepository postRepository;
 
     public PostAdapter(Context context, Page<Post> dataList) {
         this.context = context;
         this.dataList = dataList.getContent();
+        this.postRepository = RetrofitClientInstance.getRetrofitInstance(context).create(PostRepository.class);
     }
 
 
@@ -38,18 +46,73 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
-        holder.getPostTitle().setText(dataList.get(position).getTitle());
-        holder.getRating().setText(""+dataList.get(position).getRating());
+    public void onBindViewHolder(final PostViewHolder holder, final int position) {
 
-        if(dataList.get(position).getCommentCount() != null) {
+        final Post post = dataList.get(position);
+
+        holder.getPostTitle().setText(post.getTitle());
+        holder.getRating().setText("" + post.getRating());
+        holder.getCommentCount().setText("" + post.getCommentCount());
+
+
+        holder.getImageUp().setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+
+                Call<String> stringCall = postRepository.changePostRating(post.getId(), false);
+
+                stringCall.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+                        long reting = Long.parseLong(holder.getRating().getText().toString());
+
+                        holder.getRating().setText("" + (reting + 1));
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Toast.makeText(context, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        });
+
+        holder.getImageDown().setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Call<String> stringCall = postRepository.changePostRating(post.getId(), true);
+                stringCall.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+                        long reting = Long.parseLong(holder.getRating().getText().toString());
+
+                        holder.getRating().setText("" + (reting - 1));
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Toast.makeText(context, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+
+        if (dataList.get(position).getCommentCount() != null) {
             holder.getCommentCount().setText("" + dataList.get(position).getCommentCount().toString());
         }
         Picasso.Builder builder = new Picasso.Builder(context);
         builder.downloader(new OkHttp3Downloader(context));
         builder.build().load(dataList.get(position).getImageUrl())
-                .placeholder((R.drawable.ic_launcher_background))
-                .error(R.drawable.ic_launcher_background)
+                .placeholder((R.drawable.image_placeholder))
+                .error(R.drawable.broken_image_placeholder)
                 .into(holder.getPostImage());
 
     }
@@ -69,6 +132,8 @@ class PostViewHolder extends RecyclerView.ViewHolder {
     private ImageView postImage;
     private TextView rating;
     private TextView commentCount;
+    private ImageView imageUp;
+    private ImageView imageDown;
 
     PostViewHolder(View view) {
         super(view);
@@ -77,6 +142,8 @@ class PostViewHolder extends RecyclerView.ViewHolder {
 
         rating = super.itemView.findViewById(R.id.rating);
         commentCount = super.itemView.findViewById(R.id.commentCount);
+        imageUp = super.itemView.findViewById(R.id.imageUp);
+        imageDown = super.itemView.findViewById(R.id.imageDown);
     }
 
     public TextView getPostTitle() {
@@ -109,5 +176,22 @@ class PostViewHolder extends RecyclerView.ViewHolder {
 
     public void setCommentCount(TextView commentCount) {
         this.commentCount = commentCount;
+    }
+
+
+    public ImageView getImageUp() {
+        return imageUp;
+    }
+
+    public void setImageUp(ImageView imageUp) {
+        this.imageUp = imageUp;
+    }
+
+    public ImageView getImageDown() {
+        return imageDown;
+    }
+
+    public void setImageDown(ImageView imageDown) {
+        this.imageDown = imageDown;
     }
 }

@@ -7,6 +7,7 @@ public class User {
     private Long id;
     private String name;
     private String login;
+    private String password;
 //    private LocalDateTime updated;
 
     public Long getId() {
@@ -40,4 +41,13 @@ public class User {
 //    public void setUpdated(LocalDateTime updated) {
 //        this.updated = updated;
 //    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
