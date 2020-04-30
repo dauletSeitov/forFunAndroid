@@ -91,9 +91,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
-                        long reting = Long.parseLong(holder.getRating().getText().toString());
+                        long rating = Long.parseLong(holder.getRating().getText().toString());
 
-                        holder.getRating().setText("" + (reting - 1));
+                        holder.getRating().setText("" + (rating - 1));
                     }
 
                     @Override
@@ -105,9 +105,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         });
 
 
-        if (dataList.get(position).getCommentCount() != null) {
-            holder.getCommentCount().setText("" + dataList.get(position).getCommentCount().toString());
-        }
+        Long commentCount = dataList.get(position).getCommentCount();
+        holder.getCommentCount().setText(commentCount == null ? "0" : commentCount.toString());
+
+
         Picasso.Builder builder = new Picasso.Builder(context);
         builder.downloader(new OkHttp3Downloader(context));
         builder.build().load(dataList.get(position).getImageUrl())
